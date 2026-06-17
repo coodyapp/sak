@@ -4,14 +4,14 @@ A Swiss Army Knife that installs the tools you actually use, with a single
 command:
 
 ```bash
-curl -fsSL https://coody.app/entrypoint.sh | bash
+curl -fsSL https://coody.app/install.sh | bash
 ```
 
 This installs the `sak` CLI to `~/.sak` and adds it to your `PATH`. You can
 also install a tool directly in one shot:
 
 ```bash
-curl -fsSL https://coody.app/entrypoint.sh | bash -s -- install docker
+curl -fsSL https://coody.app/install.sh | bash -s -- install docker
 ```
 
 Currently supported: **Debian-based Linux only** (Ubuntu, Debian, etc).
@@ -43,6 +43,8 @@ Run sak straight from a checkout, without installing it:
 
 ## Infrastructure
 
-`coody.app/entrypoint.sh` is served by a Cloudflare Worker that proxies this
-repo's `entrypoint.sh` — see [`cloudflare/README.md`](cloudflare/README.md)
-for the deploy runbook.
+`coody.app/install.sh` is served by a Cloudflare Worker (`coody-sak-prd-01`)
+that proxies this repo's `install.sh` — see
+[`cloudflare/README.md`](cloudflare/README.md) for the deploy runbook. This
+is separate from the existing `coody-www-prd-01` Worker that serves
+`www.coody.app`.

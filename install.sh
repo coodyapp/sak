@@ -1,8 +1,8 @@
 #!/bin/bash
-# Bootstrap installer for sak, served at https://coody.app/entrypoint.sh
+# Bootstrap installer for sak, served at https://coody.app/install.sh
 #
-#   curl -fsSL https://coody.app/entrypoint.sh | bash
-#   curl -fsSL https://coody.app/entrypoint.sh | bash -s -- install docker
+#   curl -fsSL https://coody.app/install.sh | bash
+#   curl -fsSL https://coody.app/install.sh | bash -s -- install docker
 set -euo pipefail
 
 SAK_HOME="${SAK_HOME:-$HOME/.sak}"

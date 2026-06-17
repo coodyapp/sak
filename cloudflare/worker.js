@@ -1,9 +1,9 @@
-const UPSTREAM = "https://raw.githubusercontent.com/coodyapp/sak/main/entrypoint.sh";
+const UPSTREAM = "https://raw.githubusercontent.com/coodyapp/sak/main/install.sh";
 
 export default {
   async fetch(request) {
     const { pathname } = new URL(request.url);
-    if (pathname !== "/entrypoint.sh") {
+    if (pathname !== "/install.sh") {
       return new Response("Not found\n", { status: 404 });
     }
 
@@ -11,7 +11,7 @@ export default {
       cf: { cacheTtl: 300, cacheEverything: true },
     });
     if (!upstream.ok) {
-      return new Response("entrypoint.sh is temporarily unavailable\n", { status: 502 });
+      return new Response("install.sh is temporarily unavailable\n", { status: 502 });
     }
 
     return new Response(upstream.body, {
