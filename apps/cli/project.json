@@ -1,0 +1,19 @@
+{
+  "name": "cli",
+  "root": "apps/cli",
+  "projectType": "application",
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "shellcheck apps/cli/bin/sak apps/cli/lib/*.sh apps/cli/src/*/*.sh install.sh apps/cli/run.sh"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bats test/cli"
+      }
+    }
+  }
+}

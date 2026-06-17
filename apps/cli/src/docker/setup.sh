@@ -53,9 +53,12 @@ EOF
 
 check() {
   echo "Checking Docker..."
-  systemctl is-active --quiet docker \
-    && echo "Docker is running." \
-    || { echo "Docker is not running. Exiting..."; exit 1; }
+  if systemctl is-active --quiet docker; then
+    echo "Docker is running."
+  else
+    echo "Docker is not running. Exiting..."
+    exit 1
+  fi
 
   echo "Docker version: $(docker --version)"
   echo "Compose version: $(docker compose version)"

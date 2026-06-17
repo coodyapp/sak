@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2034  # these are consumed by lib/banner.sh after this is sourced
 # Shared color/tty/animation detection, used by bin/sak and install.sh.
 
 sak_use_color() {

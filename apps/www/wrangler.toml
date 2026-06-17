@@ -1,0 +1,6 @@
+name = "coody-sak-www-prd-01"
+compatibility_date = "2026-06-17"
+account_id = "51a60f4777316c6bfd6b773b58a494e8"
+
+[assets]
+directory = "./dist"

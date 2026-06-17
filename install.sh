@@ -20,15 +20,18 @@ echo
 echo "Downloading from $SAK_REPO_TARBALL"
 
 tmp_tarball="$(mktemp)"
-trap 'rm -f "$tmp_tarball"' EXIT
+tmp_extract="$(mktemp -d)"
+trap 'rm -f "$tmp_tarball"; rm -rf "$tmp_extract"' EXIT
 
 curl_progress=(-fL --progress-bar)
 [[ -n "${CI:-}" ]] && curl_progress=(-fL -s)
 curl "${curl_progress[@]}" "$SAK_REPO_TARBALL" -o "$tmp_tarball"
 
+tar -xzf "$tmp_tarball" -C "$tmp_extract" --strip-components=1
+
 rm -rf "$SAK_HOME"
 mkdir -p "$SAK_HOME"
-tar -xzf "$tmp_tarball" -C "$SAK_HOME" --strip-components=1
+cp -a "$tmp_extract/apps/cli/." "$SAK_HOME/"
 
 mkdir -p "$SAK_BIN_DIR"
 chmod +x "$SAK_HOME/bin/sak"

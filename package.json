@@ -1,0 +1,7 @@
+{
+  "name": "sak",
+  "private": true,
+  "devDependencies": {
+    "nx": "^22.7.5"
+  }
+}

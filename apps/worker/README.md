@@ -18,7 +18,7 @@ traffic — see the main README for the current status of that.
 npm install -g wrangler   # or use `npx wrangler` everywhere below
 wrangler login              # authenticates against the Cloudflare account that owns coody.app
 
-cd cloudflare
+cd apps/worker
 wrangler deploy             # creates/updates coody-sak-prd-01 and attaches the Route from wrangler.toml
 ```
 

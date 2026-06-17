@@ -15,8 +15,11 @@ SAK_HOME="$(cd "$SCRIPT_DIR/.." && pwd)"
 SAK_REPO_TARBALL="https://github.com/coodyapp/sak/archive/refs/heads/main.tar.gz"
 SAK_VERSION="0.1.0"
 
+# shellcheck source=apps/cli/lib/os.sh
 source "$SAK_HOME/lib/os.sh"
+# shellcheck source=apps/cli/lib/colors.sh
 source "$SAK_HOME/lib/colors.sh"
+# shellcheck source=apps/cli/lib/banner.sh
 source "$SAK_HOME/lib/banner.sh"
 
 usage() {
@@ -78,7 +81,7 @@ cmd_update() {
   local tmp
   tmp="$(mktemp -d)"
   curl -fsSL "$SAK_REPO_TARBALL" | tar -xz -C "$tmp" --strip-components=1
-  cp -a "$tmp/." "$SAK_HOME/"
+  cp -a "$tmp/apps/cli/." "$SAK_HOME/"
   rm -rf "$tmp"
   echo "SAK updated."
 }
