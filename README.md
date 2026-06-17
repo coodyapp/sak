@@ -1,6 +1,8 @@
 # SAK
 
-[![CI](https://github.com/coodyapp/sak/actions/workflows/ci.yml/badge.svg)](https://github.com/coodyapp/sak/actions/workflows/ci.yml)
+[![CI — CLI](https://github.com/coodyapp/sak/actions/workflows/ci-cli.yaml/badge.svg)](https://github.com/coodyapp/sak/actions/workflows/ci-cli.yaml)
+[![CI — Worker](https://github.com/coodyapp/sak/actions/workflows/ci-worker.yaml/badge.svg)](https://github.com/coodyapp/sak/actions/workflows/ci-worker.yaml)
+[![CI — WWW](https://github.com/coodyapp/sak/actions/workflows/ci-www.yaml/badge.svg)](https://github.com/coodyapp/sak/actions/workflows/ci-www.yaml)
 [![License: MIT](https://img.shields.io/github/license/coodyapp/sak)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/coodyapp/sak)](https://github.com/coodyapp/sak/releases)
 
