@@ -1,5 +1,5 @@
 #!/bin/bash
-# Bootstrap installer for sak, served at https://coody.app/install.sh
+# Bootstrap installer for SAK, served at https://coody.app/install.sh
 #
 #   curl -fsSL https://coody.app/install.sh | bash
 #   curl -fsSL https://coody.app/install.sh | bash -s -- install docker
@@ -10,20 +10,20 @@ SAK_BIN_DIR="${SAK_BIN_DIR:-$HOME/.local/bin}"
 SAK_REPO_TARBALL="https://github.com/coodyapp/sak/archive/refs/heads/main.tar.gz"
 
 if [[ ! -f /etc/debian_version ]]; then
-  echo "sak currently supports Debian-based Linux only (Ubuntu, Debian, etc)." >&2
+  echo "SAK currently supports Debian-based Linux only (Ubuntu, Debian, etc)." >&2
   echo "Support for other operating systems is coming soon." >&2
   exit 1
 fi
 
-echo "Installing sak CLI..."
+echo "Installing SAK CLI..."
 echo
 echo "Downloading from $SAK_REPO_TARBALL"
 
 tmp_tarball="$(mktemp)"
 trap 'rm -f "$tmp_tarball"' EXIT
 
-curl_progress=(-fL)
-[[ -t 2 ]] && curl_progress+=(--progress-bar) || curl_progress+=(-s)
+curl_progress=(-fL --progress-bar)
+[[ -n "${CI:-}" ]] && curl_progress=(-fL -s)
 curl "${curl_progress[@]}" "$SAK_REPO_TARBALL" -o "$tmp_tarball"
 
 rm -rf "$SAK_HOME"
@@ -57,7 +57,7 @@ echo
 echo "Binary: $SAK_BIN_DIR/sak"
 echo "$path_note"
 echo
-echo "${C_BOLD}To start using sak, run:${C_RESET}"
+echo "${C_BOLD}To start using SAK, run:${C_RESET}"
 echo
 echo "  source $shell_rc"
 echo "  sak help"

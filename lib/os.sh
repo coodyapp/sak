@@ -1,5 +1,5 @@
 #!/bin/bash
-# Shared OS guard for sak and tool scripts.
+# Shared OS guard for SAK and tool scripts.
 
 is_debian_based() {
   [[ -f /etc/debian_version ]]
@@ -7,7 +7,7 @@ is_debian_based() {
 
 require_debian_based() {
   if ! is_debian_based; then
-    echo "sak currently supports Debian-based Linux only (Ubuntu, Debian, etc)." >&2
+    echo "SAK currently supports Debian-based Linux only (Ubuntu, Debian, etc)." >&2
     echo "Support for other operating systems is coming soon." >&2
     exit 1
   fi

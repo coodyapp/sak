@@ -1,4 +1,4 @@
-# sak
+# SAK
 
 A Swiss Army Knife that installs the tools you actually use, with a single
 command:
@@ -7,7 +7,7 @@ command:
 curl -fsSL https://coody.app/install.sh | bash
 ```
 
-This installs the `sak` CLI to `~/.sak` and adds it to your `PATH`. You can
+This installs the `SAK` CLI to `~/.sak` and adds it to your `PATH`. You can
 also install a tool directly in one shot:
 
 ```bash
@@ -34,7 +34,7 @@ show up automatically in `sak list` and run via `sak install <tool>`. See
 
 ## Local development
 
-Run sak straight from a checkout, without installing it:
+Run SAK straight from a checkout, without installing it:
 
 ```bash
 ./run.sh list

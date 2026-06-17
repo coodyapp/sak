@@ -34,7 +34,7 @@ render_banner() {
 
   _reveal "${logo_text%$'\n'}" "$C_BOLD" "$animate"
   echo
-  _reveal "  Powered by coody" "$C_DIM" "$animate"
+  _reveal "  Powered by coody.app" "$C_DIM" "$animate"
   echo
   _reveal "$(usage)" "" "$animate"
   return 0

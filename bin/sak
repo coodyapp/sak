@@ -21,12 +21,12 @@ source "$SAK_HOME/lib/banner.sh"
 
 usage() {
   cat <<EOF
-sak - install the tools you actually use
+A Swiss Army Knife that Install the tools you actually use with a single command.
 
 Usage:
   sak list              List available tools
   sak install <tool>    Install a tool
-  sak update            Update sak to the latest version
+  sak update            Update SAK to the latest version
   sak version           Show version
   sak help              Show this help
 EOF
@@ -53,13 +53,13 @@ cmd_install() {
 }
 
 cmd_update() {
-  echo "Updating sak..."
+  echo "Updating SAK..."
   local tmp
   tmp="$(mktemp -d)"
   curl -fsSL "$SAK_REPO_TARBALL" | tar -xz -C "$tmp" --strip-components=1
   cp -a "$tmp/." "$SAK_HOME/"
   rm -rf "$tmp"
-  echo "sak updated."
+  echo "SAK updated."
 }
 
 case "${1:-}" in
@@ -67,7 +67,7 @@ case "${1:-}" in
   list) cmd_list ;;
   install) shift; cmd_install "${1:-}" ;;
   update) cmd_update ;;
-  version) echo "sak $SAK_VERSION" ;;
+  version) echo "SAK $SAK_VERSION" ;;
   help|--help|-h) usage ;;
   *) echo "Unknown command: $1" >&2; usage; exit 1 ;;
 esac
