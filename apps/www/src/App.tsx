@@ -29,28 +29,34 @@ export function App() {
   }
 
   return (
-    <main className="mx-auto flex min-h-svh max-w-2xl flex-col gap-10 px-6 py-16 font-mono">
-      <div>
-        <pre className="overflow-x-auto text-[0.6rem] leading-tight text-primary sm:text-xs">
+    <main className="mx-auto flex min-h-svh max-w-2xl flex-col gap-16 px-6 py-20 sm:py-28">
+      <div className="flex flex-col gap-6">
+        <pre className="overflow-x-auto font-mono text-[0.6rem] leading-tight text-primary sm:text-xs">
           {LOGO}
         </pre>
-        <p className="mt-3 text-muted-foreground">Powered by coody.app</p>
+
+        <div className="flex flex-col gap-4">
+          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+            Powered by coody.app
+          </p>
+          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+            Install the tools you actually use.
+          </h1>
+          <p className="max-w-md text-lg text-muted-foreground">
+            A Swiss Army Knife that sets up your dev tools with a single
+            command.
+          </p>
+        </div>
       </div>
 
-      <p className="text-lg">
-        A Swiss Army Knife that installs the tools you actually use, with a
-        single command.
-      </p>
-
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-col gap-3">
         <div className="relative">
-          <pre className="overflow-x-auto rounded-md border border-border bg-card p-4">
+          <pre className="overflow-x-auto rounded-md border border-border bg-card p-4 font-mono">
             <code>{INSTALL_CMD}</code>
           </pre>
           <Button
             type="button"
             size="sm"
-            variant="outline"
             className="absolute top-2 right-2"
             onClick={copyInstallCmd}
           >
@@ -62,22 +68,22 @@ export function App() {
             {copied ? "copied" : "copy"}
           </Button>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="font-mono text-sm text-muted-foreground">
           Installs the <code>sak</code> CLI to <code>~/.sak</code> and adds it
           to your <code>PATH</code>.
         </p>
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-xs tracking-wide text-muted-foreground uppercase">
+        <h2 className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
           Usage
         </h2>
-        <pre className="overflow-x-auto rounded-md border border-border bg-card p-4">
+        <pre className="overflow-x-auto rounded-md border border-border bg-card p-4 font-mono">
           <code>{USAGE}</code>
         </pre>
       </section>
 
-      <section className="border-l-2 border-border pl-4 text-sm text-muted-foreground">
+      <section className="border-l-2 border-primary/40 pl-4 font-mono text-sm text-muted-foreground">
         <p>
           Currently supported:{" "}
           <strong className="text-foreground">Debian-based Linux only</strong>{" "}
@@ -85,7 +91,7 @@ export function App() {
         </p>
       </section>
 
-      <footer className="flex items-center gap-2 border-t border-border pt-6 text-sm text-muted-foreground">
+      <footer className="flex items-center gap-2 border-t border-border pt-6 font-mono text-sm text-muted-foreground">
         <a
           href="https://github.com/coodyapp/sak"
           className="text-primary hover:underline"
