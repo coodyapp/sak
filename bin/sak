@@ -1,7 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# bin/sak is installed as a symlink (~/.local/bin/sak -> ~/.sak/bin/sak);
+# BASH_SOURCE doesn't follow symlinks, so resolve the chain manually before
+# deriving SAK_HOME from our own location.
+SAK_SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SAK_SOURCE" ]; do
+  SAK_SOURCE_DIR="$(cd -P "$(dirname "$SAK_SOURCE")" && pwd)"
+  SAK_SOURCE="$(readlink "$SAK_SOURCE")"
+  [[ "$SAK_SOURCE" != /* ]] && SAK_SOURCE="$SAK_SOURCE_DIR/$SAK_SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SAK_SOURCE")" && pwd)"
 SAK_HOME="$(cd "$SCRIPT_DIR/.." && pwd)"
 SAK_REPO_TARBALL="https://github.com/coodyapp/sak/archive/refs/heads/main.tar.gz"
 SAK_VERSION="0.1.0"
