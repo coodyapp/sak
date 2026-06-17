@@ -16,6 +16,7 @@ SAK_REPO_TARBALL="https://github.com/coodyapp/sak/archive/refs/heads/main.tar.gz
 SAK_VERSION="0.1.0"
 
 source "$SAK_HOME/lib/os.sh"
+source "$SAK_HOME/lib/colors.sh"
 source "$SAK_HOME/lib/banner.sh"
 
 usage() {

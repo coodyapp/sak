@@ -45,6 +45,4 @@ Run sak straight from a checkout, without installing it:
 
 `coody.app/install.sh` is served by a Cloudflare Worker (`coody-sak-prd-01`)
 that proxies this repo's `install.sh` — see
-[`cloudflare/README.md`](cloudflare/README.md) for the deploy runbook. This
-is separate from the existing `coody-www-prd-01` Worker that serves
-`www.coody.app`.
+[`cloudflare/README.md`](cloudflare/README.md) for the deploy runbook.

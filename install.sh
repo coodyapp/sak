@@ -15,30 +15,61 @@ if [[ ! -f /etc/debian_version ]]; then
   exit 1
 fi
 
-echo "Installing sak to $SAK_HOME..."
+echo "Installing sak CLI..."
+echo
+echo "Downloading from $SAK_REPO_TARBALL"
+
+tmp_tarball="$(mktemp)"
+trap 'rm -f "$tmp_tarball"' EXIT
+
+curl_progress=(-fL)
+[[ -t 2 ]] && curl_progress+=(--progress-bar) || curl_progress+=(-s)
+curl "${curl_progress[@]}" "$SAK_REPO_TARBALL" -o "$tmp_tarball"
+
 rm -rf "$SAK_HOME"
 mkdir -p "$SAK_HOME"
-curl -fsSL "$SAK_REPO_TARBALL" | tar -xz -C "$SAK_HOME" --strip-components=1
+tar -xzf "$tmp_tarball" -C "$SAK_HOME" --strip-components=1
 
 mkdir -p "$SAK_BIN_DIR"
 chmod +x "$SAK_HOME/bin/sak"
 ln -sf "$SAK_HOME/bin/sak" "$SAK_BIN_DIR/sak"
 
+# shellcheck source=/dev/null
+source "$SAK_HOME/lib/colors.sh"
+sak_set_colors
+
 case "$(basename "${SHELL:-bash}")" in
   zsh) shell_rc="$HOME/.zshrc" ;;
   *) shell_rc="$HOME/.bashrc" ;;
 esac
-if ! grep -qs "$SAK_BIN_DIR" "$shell_rc" 2>/dev/null; then
+path_note="Added $SAK_BIN_DIR to \$PATH in $shell_rc"
+if grep -qs "$SAK_BIN_DIR" "$shell_rc" 2>/dev/null; then
+  path_note="$SAK_BIN_DIR is already in \$PATH ($shell_rc)"
+else
   echo "export PATH=\"$SAK_BIN_DIR:\$PATH\"" >> "$shell_rc"
 fi
 
-echo "sak installed!"
+sak_version="$("$SAK_HOME/bin/sak" version)"
+
 echo
+echo "${C_GREEN}${sak_version} installed successfully!${C_RESET}"
+echo
+echo "Binary: $SAK_BIN_DIR/sak"
+echo "$path_note"
+echo
+echo "${C_BOLD}To start using sak, run:${C_RESET}"
+echo
+echo "  source $shell_rc"
+echo "  sak help"
 
 if [[ $# -gt 0 ]]; then
+  echo
   export PATH="$SAK_BIN_DIR:$PATH"
   exec "$SAK_HOME/bin/sak" "$@"
 fi
 
-echo "Run 'sak list' to see available tools, or 'sak install docker' to get started."
-echo "Restart your shell, or run: export PATH=\"$SAK_BIN_DIR:\$PATH\""
+echo
+echo "${C_BOLD}Next steps:${C_RESET}"
+echo
+echo "  sak list"
+echo "  sak install docker"
