@@ -1,0 +1,7 @@
+name = "sak-installer"
+main = "worker.js"
+compatibility_date = "2026-06-17"
+
+[[routes]]
+pattern = "coody.app/entrypoint.sh"
+zone_name = "coody.app"

@@ -1,0 +1,63 @@
+#!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SAK_HOME="$(cd "$SCRIPT_DIR/.." && pwd)"
+SAK_REPO_TARBALL="https://github.com/coodyapp/sak/archive/refs/heads/main.tar.gz"
+SAK_VERSION="0.1.0"
+
+source "$SAK_HOME/lib/os.sh"
+source "$SAK_HOME/lib/banner.sh"
+
+usage() {
+  cat <<EOF
+sak - install the tools you actually use
+
+Usage:
+  sak list              List available tools
+  sak install <tool>    Install a tool
+  sak update            Update sak to the latest version
+  sak version           Show version
+  sak help              Show this help
+EOF
+}
+
+list_tools() {
+  local dir
+  for dir in "$SAK_HOME"/src/*/; do
+    [[ -f "$dir/setup.sh" ]] && basename "$dir"
+  done
+}
+
+cmd_list() {
+  echo "Available tools:"
+  list_tools | while IFS= read -r tool; do echo "  - $tool"; done
+}
+
+cmd_install() {
+  local tool="${1:?Usage: sak install <tool>}"
+  local script="$SAK_HOME/src/$tool/setup.sh"
+  [[ -f "$script" ]] || { echo "Unknown tool: $tool" >&2; cmd_list; exit 1; }
+  require_debian_based
+  bash "$script"
+}
+
+cmd_update() {
+  echo "Updating sak..."
+  local tmp
+  tmp="$(mktemp -d)"
+  curl -fsSL "$SAK_REPO_TARBALL" | tar -xz -C "$tmp" --strip-components=1
+  cp -a "$tmp/." "$SAK_HOME/"
+  rm -rf "$tmp"
+  echo "sak updated."
+}
+
+case "${1:-}" in
+  "") render_banner "$SAK_VERSION" ;;
+  list) cmd_list ;;
+  install) shift; cmd_install "${1:-}" ;;
+  update) cmd_update ;;
+  version) echo "sak $SAK_VERSION" ;;
+  help|--help|-h) usage ;;
+  *) echo "Unknown command: $1" >&2; usage; exit 1 ;;
+esac
