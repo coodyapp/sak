@@ -39,9 +39,30 @@ list_tools() {
   done
 }
 
+_installed_version() {
+  local bin="$1"
+  command -v "$bin" >/dev/null 2>&1 || { echo "not installed"; return; }
+  local raw
+  raw="$("$bin" --version 2>/dev/null || true)"
+  echo "$raw" | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -1
+}
+
 cmd_list() {
   echo "Available tools:"
-  list_tools | while IFS= read -r tool; do echo "  - $tool"; done
+  local tool meta
+  for tool in $(list_tools); do
+    meta="$SAK_HOME/src/$tool/meta.sh"
+    if [[ -f "$meta" ]]; then
+      (
+        # shellcheck source=/dev/null
+        source "$meta"
+        version="$(_installed_version "${TOOL_BIN:-$tool}")"
+        echo "  - ${TOOL_NAME:-$tool}: ${version:-unknown} - ${TOOL_DESCRIPTION:-}"
+      )
+    else
+      echo "  - $tool"
+    fi
+  done
 }
 
 cmd_install() {
