@@ -33,12 +33,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Build app (prd)
-        run: npx nx build app
+        run: npx nx build www
 
       - name: Deploy to Pages (prd)
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/app/dist --project-name=coody-sak-www-prd-01 --branch=main --commit-dirty=true
+          command: pages deploy apps/www/dist --project-name=coody-sak-www-prd-01 --branch=main --commit-dirty=true
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
