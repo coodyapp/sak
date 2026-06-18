@@ -12,8 +12,8 @@ while [ -h "$SAK_SOURCE" ]; do
 done
 SCRIPT_DIR="$(cd -P "$(dirname "$SAK_SOURCE")" && pwd)"
 SAK_HOME="$(cd "$SCRIPT_DIR/.." && pwd)"
-SAK_REPO_TARBALL="https://github.com/coodyapp/sak/archive/refs/heads/main.tar.gz"
-SAK_VERSION="0.1.0"
+SAK_LATEST_RELEASE_API="https://api.github.com/repos/coodyapp/sak/releases/latest"
+SAK_VERSION="0.1.5"
 
 # shellcheck source=apps/cli/lib/os.sh
 source "$SAK_HOME/lib/os.sh"
@@ -78,12 +78,15 @@ cmd_install() {
 
 cmd_update() {
   echo "Updating SAK..."
-  local tmp
+  local tag tarball tmp
+  tag="$(curl -fsSL "$SAK_LATEST_RELEASE_API" | grep -m1 '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')"
+  [[ -n "$tag" ]] || { echo "Could not determine the latest SAK release." >&2; exit 1; }
+  tarball="https://github.com/coodyapp/sak/archive/refs/tags/$tag.tar.gz"
   tmp="$(mktemp -d)"
-  curl -fsSL "$SAK_REPO_TARBALL" | tar -xz -C "$tmp" --strip-components=1
+  curl -fsSL "$tarball" | tar -xz -C "$tmp" --strip-components=1
   cp -a "$tmp/apps/cli/." "$SAK_HOME/"
   rm -rf "$tmp"
-  echo "SAK updated."
+  echo "SAK updated to $tag."
 }
 
 case "${1:-}" in

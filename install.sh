@@ -7,7 +7,7 @@ set -euo pipefail
 
 SAK_HOME="${SAK_HOME:-$HOME/.sak}"
 SAK_BIN_DIR="${SAK_BIN_DIR:-$HOME/.local/bin}"
-SAK_REPO_TARBALL="https://github.com/coodyapp/sak/archive/refs/heads/main.tar.gz"
+SAK_LATEST_RELEASE_API="https://api.github.com/repos/coodyapp/sak/releases/latest"
 
 if [[ ! -f /etc/debian_version ]]; then
   echo "SAK currently supports Debian-based Linux only (Ubuntu, Debian, etc)." >&2
@@ -17,7 +17,11 @@ fi
 
 echo "Installing SAK CLI..."
 echo
-echo "Downloading from $SAK_REPO_TARBALL"
+
+sak_tag="$(curl -fsSL "$SAK_LATEST_RELEASE_API" | grep -m1 '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')"
+[[ -n "$sak_tag" ]] || { echo "Could not determine the latest SAK release." >&2; exit 1; }
+SAK_REPO_TARBALL="https://github.com/coodyapp/sak/archive/refs/tags/$sak_tag.tar.gz"
+echo "Downloading $sak_tag from $SAK_REPO_TARBALL"
 
 tmp_tarball="$(mktemp)"
 tmp_extract="$(mktemp -d)"
