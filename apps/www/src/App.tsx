@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Check, Copy } from "lucide-react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 
@@ -25,13 +26,14 @@ export function App() {
   const copyInstallCmd = async () => {
     await navigator.clipboard.writeText(INSTALL_CMD)
     setCopied(true)
+    toast("Copied to clipboard")
     setTimeout(() => setCopied(false), 1500)
   }
 
   return (
-    <main className="mx-auto flex min-h-svh max-w-2xl flex-col gap-16 px-6 py-20 sm:py-28">
+    <main className="mx-auto flex min-h-svh max-w-3xl flex-col gap-16 px-6 py-20 sm:py-28">
       <div className="flex flex-col gap-6">
-        <pre className="overflow-x-auto font-mono text-[0.6rem] leading-tight text-primary sm:text-xs">
+        <pre className="animate-logo overflow-x-auto font-mono text-[0.6rem] leading-tight text-primary sm:text-xs">
           {LOGO}
         </pre>
 
@@ -50,16 +52,11 @@ export function App() {
       </div>
 
       <section className="flex flex-col gap-3">
-        <div className="relative">
-          <pre className="overflow-x-auto rounded-md border border-border bg-card p-4 font-mono">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          <pre className="flex-1 overflow-x-auto rounded-md border border-border bg-card p-4 font-mono">
             <code>{INSTALL_CMD}</code>
           </pre>
-          <Button
-            type="button"
-            size="sm"
-            className="absolute top-2 right-2"
-            onClick={copyInstallCmd}
-          >
+          <Button type="button" size="sm" onClick={copyInstallCmd}>
             {copied ? (
               <Check className="size-3.5" />
             ) : (
@@ -99,7 +96,17 @@ export function App() {
           github.com/coodyapp/sak
         </a>
         <span>·</span>
-        <span>Powered by Coody</span>
+        <span>
+          Powered by{" "}
+          <a
+            href="https://coody.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative text-foreground transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-primary hover:after:w-full"
+          >
+            Coody
+          </a>
+        </span>
       </footer>
     </main>
   )
