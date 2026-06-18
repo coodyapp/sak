@@ -83,8 +83,12 @@ export function App() {
       <section className="border-l-2 border-primary/40 pl-4 font-mono text-sm text-muted-foreground">
         <p>
           Currently supported:{" "}
-          <strong className="text-foreground">Debian-based Linux only</strong>{" "}
-          (Ubuntu, Debian, etc). Other operating systems are coming soon.
+          <strong className="text-foreground">
+            Debian-based Linux and macOS
+          </strong>{" "}
+          for sak itself and the ops commands. Installing tools (
+          <code>sak install &lt;tool&gt;</code>) requires Debian-based Linux
+          (Ubuntu, Debian, etc) for now.
         </p>
       </section>
 

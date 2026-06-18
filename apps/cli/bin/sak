@@ -13,7 +13,7 @@ done
 SCRIPT_DIR="$(cd -P "$(dirname "$SAK_SOURCE")" && pwd)"
 SAK_HOME="$(cd "$SCRIPT_DIR/.." && pwd)"
 SAK_LATEST_RELEASE_API="https://api.github.com/repos/coodyapp/sak/releases/latest"
-SAK_VERSION="0.1.6"
+SAK_VERSION="0.2.0"
 
 # shellcheck source=apps/cli/lib/os.sh
 source "$SAK_HOME/lib/os.sh"
@@ -32,6 +32,10 @@ Usage:
   sak update            Update SAK to the latest version
   sak version           Show version
   sak help              Show this help
+
+Ops (one-shot maintenance tasks against a provider's API/CLI):
+  sak cloudflare <action>   dns, ip, tunnels, mtls, worker-purge
+  sak gh <action>           prs, purge-artifacts
 EOF
 }
 
@@ -109,12 +113,39 @@ cmd_update() {
   echo "SAK updated to $tag."
 }
 
+list_ops() {
+  local namespace="$1" f
+  for f in "$SAK_HOME"/ops/"$namespace"/*.sh; do
+    [[ -f "$f" ]] && basename "$f" .sh
+  done
+}
+
+cmd_ops() {
+  local namespace="$1"; shift
+  local action="${1:-}"
+  if [[ -z "$action" || ! -f "$SAK_HOME/ops/$namespace/$action.sh" ]]; then
+    if [[ -n "$action" ]]; then
+      echo "Unknown $namespace action: $action" >&2
+    else
+      echo "Usage: sak $namespace <action> [args...]" >&2
+    fi
+    echo >&2
+    echo "Available actions:" >&2
+    list_ops "$namespace" | sed 's/^/  - /' >&2
+    exit 1
+  fi
+  shift
+  bash "$SAK_HOME/ops/$namespace/$action.sh" "$@"
+}
+
 case "${1:-}" in
   "") render_banner "$SAK_VERSION" ;;
   list) cmd_list ;;
   install) shift; cmd_install "${1:-}" ;;
   update) cmd_update ;;
   version) echo "SAK $SAK_VERSION" ;;
+  cloudflare) shift; cmd_ops cloudflare "$@" ;;
+  gh) shift; cmd_ops gh "$@" ;;
   help|--help|-h) usage ;;
   *) echo "Unknown command: $1" >&2; usage; exit 1 ;;
 esac

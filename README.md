@@ -6,6 +6,8 @@
 [![License: MIT](https://img.shields.io/github/license/coodyapp/sak)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/coodyapp/sak)](https://github.com/coodyapp/sak/releases)
 
+![sak.coody.app](docs/website.png)
+
 A Swiss Army Knife that installs the tools you actually use, with a single
 command:
 
@@ -20,8 +22,10 @@ also install a tool directly in one shot:
 curl -fsSL https://coody.app/install.sh | bash -s -- install docker
 ```
 
-Currently supported: **Debian-based Linux only** (Ubuntu, Debian, etc).
-Other operating systems are coming soon.
+Currently supported: **Debian-based Linux and macOS** for `sak` itself and
+the ops commands. **Installing tools** (`sak install <tool>`) requires
+**Debian-based Linux** (Ubuntu, Debian, etc) — tool installers haven't been
+ported to macOS package managers yet.
 
 ## Usage
 
@@ -31,6 +35,24 @@ sak install <tool>    # install one, e.g. `sak install docker`
 sak update             # pull the latest sak + tool scripts
 sak version
 ```
+
+### Ops commands
+
+One-shot maintenance tasks against a provider's API/CLI — credentials come
+from environment variables, never hardcoded:
+
+```bash
+sak cloudflare dns [tunnel-id]      # delete DNS CNAMEs pointing at a tunnel
+sak cloudflare ip [tunnel-id]       # delete private network IP routes for a tunnel
+sak cloudflare tunnels              # list tunnels for the authenticated account
+sak cloudflare mtls <domain>        # issue an mTLS cert via acme.sh + Cloudflare DNS challenge
+sak cloudflare worker-purge         # bulk-delete non-production Cloudflare Pages deployments
+sak gh prs [gh pr list args...]     # list PRs for the current repo
+sak gh purge-artifacts <user> [org] # bulk-delete GitHub Actions artifacts
+```
+
+Run `sak cloudflare` or `sak gh` with no action to see the list of available
+actions and which environment variables each one needs.
 
 ## Adding a tool
 
@@ -53,7 +75,9 @@ This is an [Nx](https://nx.dev) monorepo, mainly for `nx affected`-driven CI
 across the few pieces below — there's no compiled code here, so Nx isn't
 buying caching or codegen, just consistent lint/test/deploy targets.
 
-- `apps/cli/` — the SAK CLI itself (`bin/`, `lib/`, `src/`, `run.sh`).
+- `apps/cli/` — the SAK CLI itself (`bin/`, `lib/`, `src/`, `ops/`, `run.sh`).
+  `src/` holds tool installers (`sak install <tool>`); `ops/` holds one-shot
+  provider maintenance commands (`sak <namespace> <action>`).
 - `install.sh` stays at the repo root — it's fetched by a hardcoded URL from
   the Worker that serves `coody.app/install.sh`, and it extracts
   `apps/cli/` from the downloaded tarball into `$SAK_HOME`.

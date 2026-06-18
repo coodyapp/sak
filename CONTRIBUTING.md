@@ -4,6 +4,9 @@ Thanks for considering a contribution.
 
 ## Dev setup
 
+`sak` itself and the ops commands run on Debian-based Linux and macOS;
+`sak install <tool>` is Debian-based Linux only (see `apps/cli/lib/os.sh`).
+
 The CLI (`apps/cli/`) has no build step. Clone the repo and run it straight
 from the checkout:
 
@@ -36,11 +39,32 @@ Create `apps/cli/src/<tool>/setup.sh` and `apps/cli/src/<tool>/meta.sh`:
 The tool shows up in `sak list` and becomes installable via
 `sak install <tool>` automatically — no registry to update.
 
+## Adding an ops command
+
+Ops commands are one-shot maintenance tasks against a provider's API/CLI
+(purging deployments, listing PRs, rotating DNS records) — different from
+"install a tool" because they're not idempotent system installs, they need
+credentials, and they run from your own machine, not the target server.
+
+Create `apps/cli/ops/<namespace>/<action>.sh` — a self-contained script that:
+
+- Reads credentials from environment variables (e.g. `CF_API_TOKEN`), never
+  hardcoded. Use `"${VAR:?Set VAR (...)}"` so missing credentials fail fast
+  with a clear message.
+- Confirms before anything destructive (`read -rp ... [y/N]`), and avoid
+  apostrophes inside `${VAR:?message}` text — they confuse shellcheck's
+  parser.
+
+It becomes runnable as `sak <namespace> <action> [args...]` automatically —
+see `apps/cli/ops/cloudflare/` and `apps/cli/ops/gh/` for working examples.
+`sak <namespace>` with no action lists the available actions for that
+namespace.
+
 ## Shell style
 
 - `set -euo pipefail` at the top of every script.
 - Keep scripts [shellcheck](https://www.shellcheck.net/)-clean:
-  `shellcheck apps/cli/bin/sak apps/cli/lib/*.sh apps/cli/src/*/*.sh install.sh apps/cli/run.sh`
+  `shellcheck apps/cli/bin/sak apps/cli/lib/*.sh apps/cli/src/*/*.sh apps/cli/ops/*/*.sh install.sh apps/cli/run.sh`
 - Prefer plain POSIX-ish bash over bashisms that aren't load-bearing.
 
 ## Tests

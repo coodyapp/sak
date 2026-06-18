@@ -6,7 +6,7 @@
     "lint": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "shellcheck apps/cli/bin/sak apps/cli/lib/*.sh apps/cli/src/*/*.sh install.sh apps/cli/run.sh"
+        "command": "shellcheck apps/cli/bin/sak apps/cli/lib/*.sh apps/cli/src/*/*.sh apps/cli/ops/*/*.sh install.sh apps/cli/run.sh"
       }
     },
     "test": {

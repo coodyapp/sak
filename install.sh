@@ -9,8 +9,8 @@ SAK_HOME="${SAK_HOME:-$HOME/.sak}"
 SAK_BIN_DIR="${SAK_BIN_DIR:-$HOME/.local/bin}"
 SAK_LATEST_RELEASE_API="https://api.github.com/repos/coodyapp/sak/releases/latest"
 
-if [[ ! -f /etc/debian_version ]]; then
-  echo "SAK currently supports Debian-based Linux only (Ubuntu, Debian, etc)." >&2
+if [[ ! -f /etc/debian_version ]] && [[ "$(uname -s)" != "Darwin" ]]; then
+  echo "SAK currently supports Debian-based Linux and macOS only." >&2
   echo "Support for other operating systems is coming soon." >&2
   exit 1
 fi
