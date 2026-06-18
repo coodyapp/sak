@@ -39,7 +39,7 @@ export function App() {
 
         <div className="flex flex-col gap-4">
           <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
-            Powered by coody.app
+            Powered by coody.app · v{import.meta.env.VITE_SAK_VERSION}
           </p>
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
             Install the tools you actually use.

@@ -13,7 +13,7 @@ done
 SCRIPT_DIR="$(cd -P "$(dirname "$SAK_SOURCE")" && pwd)"
 SAK_HOME="$(cd "$SCRIPT_DIR/.." && pwd)"
 SAK_LATEST_RELEASE_API="https://api.github.com/repos/coodyapp/sak/releases/latest"
-SAK_VERSION="0.2.0"
+SAK_VERSION="0.2.1"
 
 # shellcheck source=apps/cli/lib/os.sh
 source "$SAK_HOME/lib/os.sh"
