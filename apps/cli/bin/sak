@@ -13,7 +13,7 @@ done
 SCRIPT_DIR="$(cd -P "$(dirname "$SAK_SOURCE")" && pwd)"
 SAK_HOME="$(cd "$SCRIPT_DIR/.." && pwd)"
 SAK_LATEST_RELEASE_API="https://api.github.com/repos/coodyapp/sak/releases/latest"
-SAK_VERSION="0.1.5"
+SAK_VERSION="0.1.6"
 
 # shellcheck source=apps/cli/lib/os.sh
 source "$SAK_HOME/lib/os.sh"
@@ -73,19 +73,39 @@ cmd_install() {
   local script="$SAK_HOME/src/$tool/setup.sh"
   [[ -f "$script" ]] || { echo "Unknown tool: $tool" >&2; cmd_list; exit 1; }
   require_debian_based
+
+  local meta="$SAK_HOME/src/$tool/meta.sh"
+  local tool_name="$tool"
+  [[ -f "$meta" ]] && tool_name="$(source "$meta"; echo "${TOOL_NAME:-$tool}")"
+
+  local reply
+  read -r -p "Install $tool_name? [y/N] " reply
+  case "$reply" in
+    [yY]|[yY][eE][sS]) ;;
+    *) echo "Aborted." >&2; exit 1 ;;
+  esac
+
   bash "$script"
 }
 
 cmd_update() {
   echo "Updating SAK..."
-  local tag tarball tmp
+  local tag tarball tmp new_home
   tag="$(curl -fsSL "$SAK_LATEST_RELEASE_API" | grep -m1 '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')"
   [[ -n "$tag" ]] || { echo "Could not determine the latest SAK release." >&2; exit 1; }
   tarball="https://github.com/coodyapp/sak/archive/refs/tags/$tag.tar.gz"
   tmp="$(mktemp -d)"
   curl -fsSL "$tarball" | tar -xz -C "$tmp" --strip-components=1
-  cp -a "$tmp/apps/cli/." "$SAK_HOME/"
+  # Stage into a fresh directory and swap it in, rather than cp -a'ing onto
+  # $SAK_HOME in place: this script is itself $SAK_HOME/bin/sak, and
+  # overwriting a file mid-execution desyncs bash's read offset. rm+mv only
+  # unlinks/replaces the directory entry, so our already-open fd keeps
+  # reading the original content safely to the end.
+  new_home="$(mktemp -d)"
+  cp -a "$tmp/apps/cli/." "$new_home/"
   rm -rf "$tmp"
+  rm -rf "$SAK_HOME"
+  mv "$new_home" "$SAK_HOME"
   echo "SAK updated to $tag."
 }
 
