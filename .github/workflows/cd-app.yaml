@@ -3,16 +3,22 @@ name: CD — WWW
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   deploy:
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
       deployments: write
+    environment:
+      name: prd
+      url: https://sak.coody.app
 
     steps:
       - uses: actions/checkout@v5
@@ -27,13 +33,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Build app (prd)
-        run: npx nx build www
+        run: npx nx build app
 
-      - name: Deploy to Cloudflare Workers (prd)
+      - name: Deploy to Pages (prd)
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: apps/www
-          command: deploy
+          command: pages deploy apps/app/dist --project-name=coody-sak-www-prd-01 --branch=main --commit-dirty=true
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
