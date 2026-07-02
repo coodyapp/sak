@@ -18,10 +18,14 @@ export function Terminal({
   const [copied, setCopied] = useState(false)
 
   const copyCommands = async () => {
-    await navigator.clipboard.writeText(commands.join("\n"))
-    setCopied(true)
-    toast("Copied to clipboard")
-    setTimeout(() => setCopied(false), 1500)
+    try {
+      await navigator.clipboard.writeText(commands.join("\n"))
+      setCopied(true)
+      toast("Copied to clipboard")
+      setTimeout(() => setCopied(false), 1500)
+    } catch {
+      toast("Could not copy commands")
+    }
   }
 
   return (
@@ -55,30 +59,42 @@ export function Terminal({
           )}
           {copied ? "copied" : "copy"}
         </button>
-        <div className="relative z-[1] flex flex-col gap-2.5 p-5 pr-20">
+        <div className="relative z-[1] flex flex-col gap-2.5 overflow-x-auto p-5 pr-20">
           {commands.map((command, index) => (
-            <div key={`${command}-${index}`} className="flex gap-2.5">
-              <span aria-hidden className="text-red-500/80 select-none">
+            <div
+              key={`${command}-${index}`}
+              className="flex w-max min-w-full gap-2.5"
+            >
+              <span
+                aria-hidden
+                className="shrink-0 text-red-500/80 select-none"
+              >
                 &gt;
               </span>
-              <code
-                className={
-                  typewriter
-                    ? "terminal-typewriter break-all whitespace-pre-wrap text-red-100 drop-shadow-[0_0_8px_rgba(255,95,87,0.35)]"
-                    : "break-all whitespace-pre-wrap text-red-100 drop-shadow-[0_0_8px_rgba(255,95,87,0.35)]"
-                }
-                style={
-                  typewriter
-                    ? ({
-                        "--terminal-typewriter-width": `${command.length}ch`,
+              {typewriter ? (
+                <code className="terminal-command text-red-100 drop-shadow-[0_0_8px_rgba(255,95,87,0.35)]">
+                  <span className="terminal-command-ghost">{command}</span>
+                  <span
+                    aria-hidden
+                    className="terminal-typewriter"
+                    style={
+                      {
                         "--terminal-typewriter-delay": `${index * 0.7}s`,
-                        "--terminal-typewriter-steps": command.length,
-                      } as CSSProperties)
-                    : undefined
-                }
-              >
-                {command}
-              </code>
+                        "--terminal-typewriter-steps": Math.max(
+                          command.length,
+                          1
+                        ),
+                      } as CSSProperties
+                    }
+                  >
+                    {command}
+                  </span>
+                </code>
+              ) : (
+                <code className="whitespace-pre text-red-100 drop-shadow-[0_0_8px_rgba(255,95,87,0.35)]">
+                  {command}
+                </code>
+              )}
             </div>
           ))}
         </div>

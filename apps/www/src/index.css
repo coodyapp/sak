@@ -221,19 +221,32 @@
   box-shadow: inset 0 0 48px rgba(255, 95, 87, 0.12);
 }
 
+.terminal-command {
+  position: relative;
+  display: inline-grid;
+  white-space: pre;
+}
+
+.terminal-command-ghost,
+.terminal-typewriter {
+  grid-area: 1 / 1;
+  white-space: pre;
+}
+
+.terminal-command-ghost {
+  visibility: hidden;
+}
+
 @keyframes terminal-typewriter {
   from {
-    max-width: 0;
+    clip-path: inset(0 100% 0 0);
   }
   to {
-    max-width: var(--terminal-typewriter-width);
+    clip-path: inset(0 0 0 0);
   }
 }
 
 .terminal-typewriter {
-  display: inline-block;
-  max-width: 0;
-  overflow: hidden;
   animation: terminal-typewriter 0.65s steps(var(--terminal-typewriter-steps))
     var(--terminal-typewriter-delay) both;
 }
@@ -377,7 +390,7 @@
   }
 
   .terminal-typewriter {
-    max-width: none;
+    clip-path: none;
   }
 
   .glitch-background {
