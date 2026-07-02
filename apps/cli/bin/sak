@@ -13,7 +13,7 @@ done
 SCRIPT_DIR="$(cd -P "$(dirname "$SAK_SOURCE")" && pwd)"
 SAK_HOME="$(cd "$SCRIPT_DIR/.." && pwd)"
 SAK_LATEST_RELEASE_API="https://api.github.com/repos/coodyapp/sak/releases/latest"
-SAK_VERSION="0.2.1"
+SAK_VERSION="0.2.2"
 
 # shellcheck source=apps/cli/lib/os.sh
 source "$SAK_HOME/lib/os.sh"
@@ -80,7 +80,11 @@ cmd_install() {
 
   local meta="$SAK_HOME/src/$tool/meta.sh"
   local tool_name="$tool"
-  [[ -f "$meta" ]] && tool_name="$(source "$meta"; echo "${TOOL_NAME:-$tool}")"
+  [[ -f "$meta" ]] && tool_name="$(
+    # shellcheck source=/dev/null
+    source "$meta"
+    echo "${TOOL_NAME:-$tool}"
+  )"
 
   local reply
   read -r -p "Install $tool_name? [y/N] " reply
