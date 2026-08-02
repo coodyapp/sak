@@ -3,6 +3,11 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
+/* public/ holds static assets served verbatim (robots.txt, _headers, the
+   standalone 404 page). None of it is Tailwind-authored, and scanning it makes
+   the class detector emit junk utilities from ordinary CSS property names. */
+@source not "../public";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
